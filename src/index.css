@@ -1,0 +1,261 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Dark Forest Green Theme - Deep natural tones */
+    --background: 150 20% 6%;
+    --foreground: 0 0% 96%;
+
+    --card: 150 18% 10%;
+    --card-foreground: 0 0% 96%;
+
+    --popover: 150 18% 9%;
+    --popover-foreground: 0 0% 96%;
+
+    /* Forest Green - Primary Brand Color */
+    --primary: 145 65% 42%;
+    --primary-foreground: 0 0% 100%;
+    --primary-dark: 145 75% 28%;
+    --primary-light: 145 60% 55%;
+
+    /* Deep Forest - Secondary */
+    --secondary: 150 15% 18%;
+    --secondary-foreground: 0 0% 96%;
+
+    --muted: 150 12% 16%;
+    --muted-foreground: 150 10% 60%;
+
+    /* Moss Green - Accent */
+    --accent: 140 35% 65%;
+    --accent-foreground: 150 20% 10%;
+
+    /* Crimson Red - Destructive */
+    --destructive: 0 85% 52%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Emerald Green - Success */
+    --success: 145 70% 48%;
+    --success-foreground: 0 0% 100%;
+
+    /* Amber - Warning */
+    --warning: 38 95% 55%;
+    --warning-foreground: 150 15% 10%;
+
+    --border: 150 15% 20%;
+    --input: 150 15% 18%;
+    --ring: 145 65% 42%;
+
+    --radius: 0.75rem;
+
+    /* Forest Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(145 65% 42%) 0%, hsl(155 70% 38%) 50%, hsl(165 60% 45%) 100%);
+    --gradient-primary-radial: radial-gradient(ellipse at top, hsl(145 65% 42% / 0.3), transparent 60%);
+    --gradient-danger: linear-gradient(135deg, hsl(0 85% 52%) 0%, hsl(10 80% 48%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(145 70% 48%) 0%, hsl(155 65% 52%) 100%);
+    --gradient-dark: linear-gradient(180deg, hsl(150 18% 12%) 0%, hsl(150 20% 6%) 100%);
+    --gradient-forest: linear-gradient(135deg, hsl(150 40% 20%) 0%, hsl(145 35% 15%) 50%, hsl(140 30% 12%) 100%);
+    --gradient-aurora: linear-gradient(135deg, hsl(145 70% 35%) 0%, hsl(165 60% 40%) 50%, hsl(180 50% 45%) 100%);
+
+    /* Forest Glows */
+    --glow-primary: 0 0 24px hsla(145 65% 42% / 0.4);
+    --glow-danger: 0 0 24px hsla(0 85% 52% / 0.35);
+    --glow-success: 0 0 24px hsla(145 70% 48% / 0.4);
+
+    /* Shadows */
+    --shadow-lg: 0 12px 48px -12px hsla(150 20% 3% / 0.7);
+    --shadow-glow: 0 0 32px hsla(145 65% 42% / 0.3);
+    --shadow-intense: 0 0 48px hsla(145 70% 38% / 0.5);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Cursor Animations & Industrial UI Enhancements */
+@layer utilities {
+  /* Custom Cursor */
+  * {
+    cursor: default;
+  }
+  
+  button, a, [role="button"] {
+    cursor: pointer;
+    position: relative;
+    transition: var(--transition-fast);
+  }
+  
+  button:hover, a:hover, [role="button"]:hover {
+    transform: translateY(-1px);
+  }
+  
+  button:active, a:active, [role="button"]:active {
+    transform: translateY(0);
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Card hover effects */
+  .card-hover {
+    transition: var(--transition-smooth);
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Tooltip explanations */
+  .tooltip-trigger {
+    position: relative;
+  }
+  
+  /* Industrial grid pattern overlay */
+  .industrial-grid {
+    background-image: 
+      linear-gradient(hsla(145 65% 42% / 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(145 65% 42% / 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Glowing border effect */
+  .glow-border {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .glow-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, transparent, hsl(var(--primary)), transparent);
+    animation: glow-rotate 3s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .glow-border:hover::before {
+    opacity: 1;
+  }
+
+  @keyframes glow-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes gradient {
+    0%, 100% { 
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+    50% { 
+      background-position: 100% 50%;
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes gradient-slow {
+    0%, 100% { 
+      background-position: 100% 50%;
+      opacity: 0.2;
+    }
+    50% { 
+      background-position: 0% 50%;
+      opacity: 0.3;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 8s ease infinite;
+  }
+
+  .animate-gradient-slow {
+    background-size: 300% 300%;
+    animation: gradient-slow 15s ease infinite;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    cursor: none;
+  }
+  
+  /* Custom cursor */
+  #custom-cursor {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border: 2px solid hsl(var(--primary));
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease-out, width 0.15s, height 0.15s;
+    mix-blend-mode: difference;
+  }
+  
+  #custom-cursor.clicking {
+    transform: scale(0.8);
+  }
+  
+  #cursor-trail {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: hsl(var(--primary) / 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.3s ease-out;
+  }
+  
+  /* Animated background */
+  .animated-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+  
+  .animated-bg::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 20% 50%, hsl(var(--primary) / 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, hsl(var(--accent) / 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, hsl(var(--success) / 0.03) 0%, transparent 50%);
+    animation: bg-float 20s ease-in-out infinite;
+  }
+  
+  @keyframes bg-float {
+    0%, 100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    33% {
+      transform: translate(5%, 5%) rotate(5deg);
+    }
+    66% {
+      transform: translate(-5%, 3%) rotate(-5deg);
+    }
+  }
+}
