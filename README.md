@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/6f56ce0f-4b6a-4abc-b746-a7b2337fc986
+**URL**: https://driver-wellness-volkswagen.lovable.app
 
 ## How can I edit this code?
 
