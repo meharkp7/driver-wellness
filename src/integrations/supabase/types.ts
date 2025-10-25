@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      trips: {
+        Row: {
+          alerts: number
+          avg_fatigue: number
+          created_at: string
+          date: string
+          distance: number
+          duration: number
+          end_time: string | null
+          id: string
+          route_name: string | null
+          start_time: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alerts?: number
+          avg_fatigue: number
+          created_at?: string
+          date?: string
+          distance: number
+          duration: number
+          end_time?: string | null
+          id?: string
+          route_name?: string | null
+          start_time?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alerts?: number
+          avg_fatigue?: number
+          created_at?: string
+          date?: string
+          distance?: number
+          duration?: number
+          end_time?: string | null
+          id?: string
+          route_name?: string | null
+          start_time?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

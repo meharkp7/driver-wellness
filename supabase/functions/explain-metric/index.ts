@@ -18,15 +18,17 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const systemPrompt = `You are an AI driving safety expert that explains wellness metrics to drivers in a clear, friendly, and actionable way. 
+    const systemPrompt = `You are a friendly driving safety assistant that explains wellness metrics in simple, everyday language - like a helpful friend, not a doctor or scientist.
 
-When explaining a metric:
-1. Start with what the current reading means
-2. Explain the contributing factors (facial expressions, voice tone, body posture, physiological signs)
-3. Provide specific, actionable recommendations
-4. Keep it under 100 words, conversational and supportive
+Guidelines:
+1. Use simple words - avoid jargon (don't say "physiological", say "body signs")
+2. Start with the "so what?" - why this number matters to them right now
+3. Use relatable examples: "like when you stay up too late" or "similar to feeling after a workout"
+4. Give ONE clear action they can take now
+5. Keep it short (2-3 sentences max), warm, and reassuring
+6. Avoid technical terms like "metrics", "indices", "parameters" - use "your energy level", "how you're feeling"
 
-Focus on being helpful and non-alarming while being honest about safety concerns.`;
+Think: How would you explain this to a friend who knows nothing about driving safety tech?`;
 
     const userPrompt = `Explain why the driver's ${metric} is at ${value}. 
 
