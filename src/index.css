@@ -188,6 +188,33 @@ All colors MUST be HSL.
     background-size: 300% 300%;
     animation: gradient-slow 15s ease infinite;
   }
+
+  /* Shadow utilities */
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .shadow-glow-primary {
+    box-shadow: 0 0 32px hsla(145 65% 42% / 0.4), 0 4px 16px hsla(145 65% 42% / 0.2);
+  }
+
+  .shadow-glow-success {
+    box-shadow: 0 0 32px hsla(145 70% 48% / 0.4), 0 4px 16px hsla(145 70% 48% / 0.2);
+  }
+
+  /* Glow pulse animation */
+  @keyframes glow-pulse {
+    0%, 100% { 
+      box-shadow: 0 0 20px hsla(145 65% 42% / 0.3);
+    }
+    50% { 
+      box-shadow: 0 0 40px hsla(145 65% 42% / 0.6);
+    }
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 3s ease-in-out infinite;
+  }
 }
 
 @layer base {

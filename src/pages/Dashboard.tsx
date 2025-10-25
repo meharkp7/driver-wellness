@@ -40,7 +40,7 @@ const Dashboard = () => {
         <AppSidebar activeTab={activeTab} onTabChange={setActiveTab} />
 
         {/* Main Content with left padding for sidebar */}
-        <main className="relative z-10 ml-20 px-6 py-6 min-h-screen">
+        <main className="relative z-10 ml-20 px-4 md:px-6 py-4 md:py-6 min-h-screen max-w-[calc(100vw-5rem)]">
         {activeTab === "dashboard" && (
           <div className="grid grid-cols-12 gap-6 animate-fade-in">
             {/* Left Column */}
