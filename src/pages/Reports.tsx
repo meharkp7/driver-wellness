@@ -25,7 +25,7 @@ const Reports = () => {
   const [selectedTrip, setSelectedTrip] = useState<any>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
-    from: subDays(new Date(), 7),
+    from: subDays(new Date(), 30), // Extended to 30 days to capture more dummy data
     to: new Date()
   });
   const [trips, setTrips] = useState<any[]>([]);
@@ -71,21 +71,22 @@ const Reports = () => {
     }
   };
 
-  // Calculate weekly data from trips
-  const weeklyData = eachDayOfInterval({
-    start: startOfWeek(dateRange.from),
-    end: endOfWeek(dateRange.to)
+  // Calculate daily data from trips for better visualization
+  const dailyData = eachDayOfInterval({
+    start: dateRange.from,
+    end: dateRange.to
   }).map(day => {
     const dayTrips = trips.filter(t => t.date === format(day, "yyyy-MM-dd"));
     return {
-      day: format(day, "EEE"),
+      date: format(day, "MMM dd"),
       fatigue: dayTrips.length > 0 
         ? Math.round(dayTrips.reduce((sum, t) => sum + t.avgFatigue, 0) / dayTrips.length)
         : 0,
       trips: dayTrips.length,
-      alerts: dayTrips.reduce((sum, t) => sum + t.alerts, 0)
+      alerts: dayTrips.reduce((sum, t) => sum + t.alerts, 0),
+      distance: dayTrips.reduce((sum, t) => sum + parseFloat(t.distance), 0)
     };
-  });
+  }).filter(d => d.trips > 0); // Only show days with actual trips
 
   // Calculate stats
   const stats = [
@@ -124,7 +125,7 @@ const Reports = () => {
 
   const handleExport = (type: "pdf" | "csv") => {
     if (type === "pdf") {
-      exportToPDF(trips, weeklyData, stats);
+      exportToPDF(trips, dailyData, stats);
       toast.success("PDF report generated successfully!");
     } else {
       exportToCSV(trips);
@@ -234,40 +235,79 @@ const Reports = () => {
 
             <TabsContent value="weekly">
               <div className="bg-card border border-border rounded-xl p-6 print:p-4">
-                <h3 className="text-xl font-bold mb-6 print:text-lg print:mb-4">Weekly Performance</h3>
-                <ResponsiveContainer width="100%" height={300}>
+                <h3 className="text-xl font-bold mb-6 print:text-lg print:mb-4">Daily Performance</h3>
+                <ResponsiveContainer width="100%" height={400}>
                   {chartType === "bar" ? (
-                    <BarChart data={weeklyData}>
+                    <BarChart data={dailyData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                      <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" />
+                      <XAxis 
+                        dataKey="date" 
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                        angle={-45}
+                        textAnchor="end"
+                        height={80}
+                      />
                       <YAxis stroke="hsl(var(--muted-foreground))" />
-                      <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: "hsl(var(--card))", 
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "8px"
+                        }} 
+                      />
                       <Legend />
                       <Bar dataKey="fatigue" fill="hsl(var(--primary))" name="Fatigue Score" radius={[8, 8, 0, 0]} />
                       <Bar dataKey="trips" fill="hsl(var(--success))" name="Trips" radius={[8, 8, 0, 0]} />
                       <Bar dataKey="alerts" fill="hsl(var(--warning))" name="Alerts" radius={[8, 8, 0, 0]} />
                     </BarChart>
                   ) : chartType === "line" ? (
-                    <LineChart data={weeklyData}>
+                    <LineChart data={dailyData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                      <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" />
+                      <XAxis 
+                        dataKey="date" 
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                        angle={-45}
+                        textAnchor="end"
+                        height={80}
+                      />
                       <YAxis stroke="hsl(var(--muted-foreground))" />
-                      <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: "hsl(var(--card))", 
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "8px"
+                        }} 
+                      />
                       <Legend />
-                      <Line type="monotone" dataKey="fatigue" stroke="hsl(var(--primary))" strokeWidth={2} name="Fatigue Score" />
-                      <Line type="monotone" dataKey="trips" stroke="hsl(var(--success))" strokeWidth={2} name="Trips" />
-                      <Line type="monotone" dataKey="alerts" stroke="hsl(var(--warning))" strokeWidth={2} name="Alerts" />
+                      <Line type="monotone" dataKey="fatigue" stroke="hsl(var(--primary))" strokeWidth={3} name="Fatigue Score" dot={{ r: 4 }} />
+                      <Line type="monotone" dataKey="trips" stroke="hsl(var(--success))" strokeWidth={3} name="Trips" dot={{ r: 4 }} />
+                      <Line type="monotone" dataKey="alerts" stroke="hsl(var(--warning))" strokeWidth={3} name="Alerts" dot={{ r: 4 }} />
                     </LineChart>
                   ) : (
-                    <AreaChart data={weeklyData}>
+                    <AreaChart data={dailyData}>
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                      <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" />
+                      <XAxis 
+                        dataKey="date" 
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                        angle={-45}
+                        textAnchor="end"
+                        height={80}
+                      />
                       <YAxis stroke="hsl(var(--muted-foreground))" />
-                      <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: "hsl(var(--card))", 
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "8px"
+                        }} 
+                      />
                       <Legend />
-                      <Area type="monotone" dataKey="fatigue" fill="hsl(var(--primary))" stroke="hsl(var(--primary))" name="Fatigue Score" />
-                      <Area type="monotone" dataKey="trips" fill="hsl(var(--success))" stroke="hsl(var(--success))" name="Trips" />
-                      <Area type="monotone" dataKey="alerts" fill="hsl(var(--warning))" stroke="hsl(var(--warning))" name="Alerts" />
+                      <Area type="monotone" dataKey="fatigue" fill="hsl(var(--primary) / 0.3)" stroke="hsl(var(--primary))" strokeWidth={2} name="Fatigue Score" />
+                      <Area type="monotone" dataKey="trips" fill="hsl(var(--success) / 0.3)" stroke="hsl(var(--success))" strokeWidth={2} name="Trips" />
+                      <Area type="monotone" dataKey="alerts" fill="hsl(var(--warning) / 0.3)" stroke="hsl(var(--warning))" strokeWidth={2} name="Alerts" />
                     </AreaChart>
                   )}
                 </ResponsiveContainer>
@@ -276,24 +316,30 @@ const Reports = () => {
 
             <TabsContent value="comparison">
               <div className="bg-card border border-border rounded-xl p-6">
-                <h3 className="text-xl font-bold mb-6">Trend Comparison</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={weeklyData}>
+                <h3 className="text-xl font-bold mb-6">Distance vs Fatigue Analysis</h3>
+                <ResponsiveContainer width="100%" height={400}>
+                  <LineChart data={dailyData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                    <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }} />
-                    <Legend />
-                    <Line type="monotone" dataKey="fatigue" stroke="hsl(var(--primary))" strokeWidth={3} name="Current Week" />
-                    <Line 
-                      type="monotone" 
-                      dataKey="fatigue" 
-                      stroke="hsl(var(--muted-foreground))" 
-                      strokeWidth={2} 
-                      strokeDasharray="5 5"
-                      name="Previous Week"
-                      data={weeklyData.map(d => ({ ...d, fatigue: d.fatigue * 0.9 }))}
+                    <XAxis 
+                      dataKey="date" 
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
                     />
+                    <YAxis yAxisId="left" stroke="hsl(var(--primary))" label={{ value: 'Fatigue', angle: -90, position: 'insideLeft' }} />
+                    <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--success))" label={{ value: 'Distance (km)', angle: 90, position: 'insideRight' }} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: "hsl(var(--card))", 
+                        border: "1px solid hsl(var(--border))",
+                        borderRadius: "8px"
+                      }} 
+                    />
+                    <Legend />
+                    <Line yAxisId="left" type="monotone" dataKey="fatigue" stroke="hsl(var(--primary))" strokeWidth={3} name="Fatigue Score" dot={{ r: 4 }} />
+                    <Line yAxisId="right" type="monotone" dataKey="distance" stroke="hsl(var(--success))" strokeWidth={3} name="Distance (km)" dot={{ r: 4 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>

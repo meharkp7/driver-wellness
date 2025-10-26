@@ -11,11 +11,12 @@ interface Trip {
   alerts: number;
 }
 
-interface WeeklyData {
-  day: string;
+interface DailyData {
+  date: string;
   fatigue: number;
   trips: number;
   alerts: number;
+  distance?: number;
 }
 
 interface Stat {
@@ -27,7 +28,7 @@ interface Stat {
 
 export const exportToPDF = (
   trips: Trip[],
-  weeklyData: WeeklyData[],
+  dailyData: DailyData[],
   stats: Stat[]
 ) => {
   const doc = new jsPDF();
@@ -61,13 +62,13 @@ export const exportToPDF = (
     headStyles: { fillColor: [59, 130, 246] }
   });
   
-  // Weekly Performance
+  // Daily Performance
   const finalY = (doc as any).lastAutoTable.finalY || 45;
   doc.setFontSize(14);
-  doc.text("Weekly Performance", 14, finalY + 15);
+  doc.text("Daily Performance", 14, finalY + 15);
   
-  const weeklyTableData = weeklyData.map(day => [
-    day.day,
+  const dailyTableData = dailyData.slice(0, 10).map(day => [
+    day.date,
     day.fatigue.toString(),
     day.trips.toString(),
     day.alerts.toString()
@@ -75,8 +76,8 @@ export const exportToPDF = (
   
   autoTable(doc, {
     startY: finalY + 20,
-    head: [["Day", "Fatigue Score", "Trips", "Alerts"]],
-    body: weeklyTableData,
+    head: [["Date", "Fatigue Score", "Trips", "Alerts"]],
+    body: dailyTableData,
     theme: "striped",
     headStyles: { fillColor: [59, 130, 246] }
   });
