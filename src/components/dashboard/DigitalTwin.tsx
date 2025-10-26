@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Brain, Heart, Activity, Smile, Frown, Zap } from "lucide-react";
+import { Brain, Heart, Activity, Smile, Frown, Zap, Wind, Eye, Gauge, Lightbulb } from "lucide-react";
 import avatarImage from "@/assets/digital-twin-avatar.png";
 
 interface DigitalTwinProps {
@@ -101,10 +101,27 @@ const DigitalTwin = ({ fatigueLevel }: DigitalTwinProps) => {
     }
   };
 
+  const getSuggestion = () => {
+    if (fatigueLevel >= 70 && currentEmotion === "happy") {
+      return "You're doing great! Keep up the focus.";
+    } else if (fatigueLevel >= 70 && currentEmotion === "stressed") {
+      return "Take deep breaths - you're still alert.";
+    } else if (fatigueLevel >= 40 && currentEmotion === "stressed") {
+      return "Consider a short break to reduce stress.";
+    } else if (fatigueLevel >= 40 && currentEmotion === "tired") {
+      return "Rest stop recommended in the next 30 minutes.";
+    } else if (currentEmotion === "tired") {
+      return "Pull over safely - fatigue levels are critical.";
+    } else {
+      return "Monitor your stress and take breaks as needed.";
+    }
+  };
+
   const statusColor = getStatusColor();
   const statusLabel = fatigueLevel >= 70 ? "Alert" : fatigueLevel >= 40 ? "Moderate" : "Critical";
   const EmotionIcon = getEmotionIcon();
   const emotionLabel = getEmotionLabel();
+  const suggestion = getSuggestion();
 
   return (
     <div
@@ -206,7 +223,7 @@ const DigitalTwin = ({ fatigueLevel }: DigitalTwinProps) => {
       {/* Overlay Details - Shows on Hover */}
       {isExpanded && (
         <div 
-          className="absolute border-2 rounded-2xl shadow-2xl p-5 w-80 animate-fade-in pointer-events-none"
+          className="absolute border-2 rounded-2xl shadow-2xl p-5 w-96 animate-fade-in pointer-events-none"
           style={{
             background: "linear-gradient(135deg, rgba(12, 17, 15, 0.98), rgba(20, 30, 25, 0.98))",
             backdropFilter: "blur(20px)",
@@ -222,48 +239,103 @@ const DigitalTwin = ({ fatigueLevel }: DigitalTwinProps) => {
               <Activity className="w-4 h-4" style={{ color: statusColor }} />
               Digital Twin Monitor
             </h3>
-            <p className="text-xs text-muted-foreground">Real-time Emotional Analysis</p>
+            <p className="text-xs text-muted-foreground">Real-time Wellness Analysis</p>
           </div>
 
-          <div className="space-y-3">
+          {/* AI Suggestion */}
+          <div 
+            className="mb-4 p-3 rounded-lg flex items-start gap-2"
+            style={{ 
+              background: `linear-gradient(135deg, ${statusColor}15, ${statusColor}05)`,
+              border: `1px solid ${statusColor}30`
+            }}
+          >
+            <Lightbulb className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: statusColor }} />
+            <p className="text-xs text-foreground/90 leading-relaxed">{suggestion}</p>
+          </div>
+
+          <div className="space-y-2">
+            {/* Current Emotion */}
             <div 
-              className="flex items-center justify-between p-3 rounded-lg transition-all duration-300"
+              className="flex items-center justify-between p-2.5 rounded-lg transition-all duration-300"
               style={{ 
                 background: `linear-gradient(135deg, ${statusColor}20, ${statusColor}08)`,
                 border: `1px solid ${statusColor}40`
               }}
             >
               <div className="flex items-center gap-2">
-                <EmotionIcon className="w-5 h-5" style={{ color: statusColor }} />
-                <span className="text-sm font-medium text-foreground">Current Emotion</span>
+                <EmotionIcon className="w-4 h-4" style={{ color: statusColor }} />
+                <span className="text-xs font-medium text-foreground">Emotion</span>
               </div>
-              <span className="text-sm font-bold" style={{ color: statusColor }}>
+              <span className="text-xs font-bold" style={{ color: statusColor }}>
                 {emotionLabel}
               </span>
             </div>
 
+            {/* Alertness */}
             <div 
-              className="flex items-center justify-between p-3 rounded-lg"
+              className="flex items-center justify-between p-2.5 rounded-lg"
               style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
             >
               <div className="flex items-center gap-2">
-                <Brain className="w-5 h-5 text-primary" />
-                <span className="text-sm font-medium text-foreground">Alertness</span>
+                <Brain className="w-4 h-4 text-primary" />
+                <span className="text-xs font-medium text-foreground">Alertness</span>
               </div>
-              <span className="text-sm font-mono font-bold text-foreground">
+              <span className="text-xs font-mono font-bold text-foreground">
                 {fatigueLevel}%
               </span>
             </div>
 
+            {/* Heart Rate */}
             <div 
-              className="flex items-center justify-between p-3 rounded-lg"
+              className="flex items-center justify-between p-2.5 rounded-lg"
               style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
             >
               <div className="flex items-center gap-2">
-                <Heart className="w-5 h-5 text-destructive" />
-                <span className="text-sm font-medium text-foreground">Heart Rate</span>
+                <Heart className="w-4 h-4 text-destructive" />
+                <span className="text-xs font-medium text-foreground">Heart Rate</span>
               </div>
-              <span className="text-sm font-mono font-bold text-foreground">72 BPM</span>
+              <span className="text-xs font-mono font-bold text-foreground">72 BPM</span>
+            </div>
+
+            {/* Breath Rate */}
+            <div 
+              className="flex items-center justify-between p-2.5 rounded-lg"
+              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              <div className="flex items-center gap-2">
+                <Wind className="w-4 h-4 text-info" />
+                <span className="text-xs font-medium text-foreground">Breath Rate</span>
+              </div>
+              <span className="text-xs font-mono font-bold text-foreground">16/min</span>
+            </div>
+
+            {/* Eye Blink Rate */}
+            <div 
+              className="flex items-center justify-between p-2.5 rounded-lg"
+              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              <div className="flex items-center gap-2">
+                <Eye className="w-4 h-4 text-warning" />
+                <span className="text-xs font-medium text-foreground">Blink Rate</span>
+              </div>
+              <span className="text-xs font-mono font-bold text-foreground">
+                {currentEmotion === "tired" ? "Low" : "Normal"}
+              </span>
+            </div>
+
+            {/* Stress Level */}
+            <div 
+              className="flex items-center justify-between p-2.5 rounded-lg"
+              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              <div className="flex items-center gap-2">
+                <Gauge className="w-4 h-4 text-accent" />
+                <span className="text-xs font-medium text-foreground">Stress Level</span>
+              </div>
+              <span className="text-xs font-mono font-bold text-foreground">
+                {currentEmotion === "stressed" ? "High" : currentEmotion === "tired" ? "Moderate" : "Low"}
+              </span>
             </div>
           </div>
         </div>
